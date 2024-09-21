@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+//use Illuminate\Support\Facades\DateTime;
+use DateTime;
 
 class PostController extends Controller
 {
     public function index()
     {
-        dd(Post::factory()->create());
-        $posts=Post::all();
-
+        //dd(Post::factory()->create());
+       // dd(auth::user());
+       // $posts=Post::all();
+       $posts=Auth::user()->posts;
+      
         return view('Posts.index', compact('posts'));
     }
 
@@ -22,6 +28,9 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        if (Auth::id() !=$post->user_id) {
+           abort(403);
+        }
 
         return view('Posts.show', compact('post'));
     }
@@ -62,5 +71,11 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function test()
+    {
+        $results = Post::take(1) ->get();
+        dd($results);
     }
 }
