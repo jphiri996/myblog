@@ -18,8 +18,9 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $data['email'])->first();
+        //(!Auth::attempt(['email' => $data['email'], 'password' => $data['password']]))
 
-        if (!Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+        if (!$user || !Hash::check($data['password'], $user->passwrd)) {
             return response()->json([
                 'data'=>null,
                 'message'=>'Wrong Credentials',
